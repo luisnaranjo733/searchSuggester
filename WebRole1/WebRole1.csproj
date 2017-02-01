@@ -116,8 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="interfaces\ITrie.cs" />
-    <Compile Include="interfaces\ITrieNode.cs" />
-    <Compile Include="models\Trie.cs" />
     <Compile Include="models\TrieNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuggestionService.asmx.cs">

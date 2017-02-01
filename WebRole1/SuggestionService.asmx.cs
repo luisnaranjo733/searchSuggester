@@ -22,7 +22,7 @@ namespace WebRole1
     {
         private string seedFilePath; // path to seed file
         private PerformanceCounter memProcess; // perf counter for checking mb available in memory
-        private Trie trie; // trie data structure
+
 
         private const string SEED_FILE_NAME = "seed_short.txt"; // 1000 lines only for testing
         //private const string SEED_FILE_NAME = "seed.txt"; // full file
@@ -34,7 +34,6 @@ namespace WebRole1
 
             memProcess = new PerformanceCounter("Memory", "Available MBytes");
 
-            trie = new Trie();
         }
 
         [WebMethod]
@@ -90,7 +89,7 @@ namespace WebRole1
             {
                 if (GetAvailableMBytes() > 20)
                 {
-                    trie.AddTitle(title);
+                    //trie.AddTitle(title);
                 }
 
             }
@@ -101,7 +100,9 @@ namespace WebRole1
         [WebMethod]
         public string[] searchTrie(string query)
         {
-            return trie.SearchForPrefix(query);
+            string[] temp = new string[1];
+            return temp;
+            //return trie.SearchForPrefix(query);
 
         }
 
