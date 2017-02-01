@@ -21,9 +21,14 @@ namespace WebRole1.models
         /// <summary>
         /// Add a word to the trie
         /// </summary>
-        /// <param name="title">The name of the word to be added to the trie</param>
+        /// <param name="title">The name of the word to be added to the trie. Must be non-empty string</param>
         public void AddTitle(string title)
         {
+            if (title.Length == 0) // do nothing if illegal string passed in
+            {
+                return;
+            }
+
             char firstLetter = title[0];
             bool firstLetterFound = false;
             foreach(TrieNode child in children)
@@ -55,10 +60,10 @@ namespace WebRole1.models
         }
 
         /// <summary>
-        /// 
+        /// Fetch a list of search sugguestions for a prefix
         /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
+        /// <param name="title">Title is the prefix string search query</param>
+        /// <returns>List which represents a collection of the complete search results found. May be empty but will always be defined</returns>
         public List<string> SearchForPrefix(string title)
         {
             TrieNode trie = GetWordTree(title);
@@ -70,6 +75,13 @@ namespace WebRole1.models
             return suggestions;
         }
 
+        /// <summary>
+        /// This recursive method searches a trie for search suggestions
+        /// </summary>
+        /// <param name="title">Search prefix string</param>
+        /// <param name="buffer">StringBugger of search prefix string</param>
+        /// <param name="node">Node of Trie to begin search from (doesn't have to be root - use GetWordTree() for faster)</param>
+        /// <returns></returns>
         private List<string> GetSuggestions(string title, StringBuilder buffer, TrieNode node)
         {
             List<string> suggestions = new List<string>();
@@ -94,10 +106,13 @@ namespace WebRole1.models
         }
 
         /// <summary>
-        /// 
+        /// This method returns a reference to the TrieNode which represents the last character of the search prefix.
+        /// This is a private helper method for SearchForPrefix.
+        /// e.g: GetWordTree("dog") -> returns a reference to the TrieNode "g" (last letter of "dog") so that you can begin
+        /// searching from that node with GetSuggestions()
         /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
+        /// <param name="title">search prefix</param>
+        /// <returns>Reference to TrieNode</returns>
         private TrieNode GetWordTree(string title)
         {
             TrieNode wordTree = null;
