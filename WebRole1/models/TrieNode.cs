@@ -61,11 +61,11 @@ namespace WebRole1.models
         /// <returns>List which represents a collection of the complete search results found. May be empty but will always be defined</returns>
         public List<string> SearchForPrefix(string searchPrefix)
         {
-            TrieNode trie = GetWordTree(searchPrefix);
+            TrieNode trie = GetWordTree(searchPrefix); // reference to last character of prefix string in trie
             List<string> suggestions = new List<string>();
             if (trie != null)
             {
-                suggestions = GetSuggestions(searchPrefix, new StringBuilder(searchPrefix), trie);
+                suggestions = GetSuggestions(searchPrefix, new StringBuilder(searchPrefix), trie); // start recursive search from end of prefix string
             }
             return suggestions;
         }
@@ -104,7 +104,7 @@ namespace WebRole1.models
                     {
                         return wordTree;
                     }
-                    break;
+                    break; // character found, all recursion needs to be based off this character, so stop looping through adjacent irrelevant branches
                 }
             }
 
