@@ -13,6 +13,11 @@ namespace WebRole1.models
         private bool isWordEnding = false;
         private List<TrieNode> children = new List<TrieNode>();
 
+        public override string ToString()
+        {
+            return "" + this.data;
+        }
+
         /// <summary>
         /// Add a word to the trie
         /// </summary>
@@ -39,7 +44,7 @@ namespace WebRole1.models
             if (!firstLetterFound) // character is not present yet, so add it and then recurse
             {
                 TrieNode childNode = new TrieNode();
-                childNode.data = firstLetter;
+                childNode.data = Char.ToLower(firstLetter);
                 children.Add(childNode);
 
                 if (searchPrefix.Length == 1) // childNode is the last character of a title, so mark it and stop recursing
@@ -61,6 +66,7 @@ namespace WebRole1.models
         /// <returns>List which represents a collection of the complete search results found. May be empty but will always be defined</returns>
         public List<string> SearchForPrefix(string searchPrefix)
         {
+            searchPrefix = searchPrefix.ToLower();
             TrieNode trie = GetWordTree(searchPrefix); // reference to last character of prefix string in trie
             List<string> suggestions = new List<string>();
             if (trie != null)

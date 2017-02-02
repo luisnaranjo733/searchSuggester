@@ -22,6 +22,7 @@ namespace WebRole1
     {
         private string seedFilePath; // path to seed file
         private PerformanceCounter memProcess; // perf counter for checking mb available in memory
+        private TrieNode trie;
 
 
         private const string SEED_FILE_NAME = "seed_short.txt"; // 1000 lines only for testing
@@ -31,7 +32,7 @@ namespace WebRole1
         {
             string fileDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(); // special dir to store files even in cloud
             seedFilePath = Path.Combine(fileDir, SEED_FILE_NAME); // resolve expected path to seed file
-
+            trie = new TrieNode();
             memProcess = new PerformanceCounter("Memory", "Available MBytes");
 
         }
@@ -78,31 +79,36 @@ namespace WebRole1
 
 
         [WebMethod]
-        public string buildTrie()
+        public string[] buildTrie()
         {
+            List<string> temp = new List<string>();
+
             if (!File.Exists(seedFilePath))
             {
-                return "Sorry, you need to manually download the seed file first";
+                //return "Sorry, you need to manually download the seed file first";
+                temp.Add("Sorry, you need to manually download the seed file first");
+                return temp.ToArray();
             }
 
             foreach(string title in File.ReadLines(seedFilePath))
             {
-                if (GetAvailableMBytes() > 20)
+                float memoryRemaining = GetAvailableMBytes();
+                if (memoryRemaining > 20)
                 {
+                    temp.Add(title);
                     //trie.AddTitle(title);
                 }
 
             }
 
-            return "trie built";
+            return temp.ToArray();
         }
 
         [WebMethod]
         public string[] searchTrie(string query)
         {
-            string[] temp = new string[1];
-            return temp;
-            //return trie.SearchForPrefix(query);
+            List<string> results = trie.SearchForPrefix(query);
+            return trie.SearchForPrefix(query).ToArray();
 
         }
 
