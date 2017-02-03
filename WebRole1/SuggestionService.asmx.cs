@@ -22,7 +22,7 @@ namespace WebRole1
     {
         private string seedFilePath; // path to seed file
         private PerformanceCounter memProcess; // perf counter for checking mb available in memory
-        private TrieNode trie;
+        private Trie trie;
 
 
         private const string SEED_FILE_NAME = "seed_short.txt"; // 1000 lines only for testing
@@ -32,7 +32,7 @@ namespace WebRole1
         {
             string fileDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(); // special dir to store files even in cloud
             seedFilePath = Path.Combine(fileDir, SEED_FILE_NAME); // resolve expected path to seed file
-            trie = new TrieNode();
+            trie = new Trie();
             memProcess = new PerformanceCounter("Memory", "Available MBytes");
 
         }
