@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using WebRole1.interfaces;
 
@@ -10,19 +11,19 @@ namespace WebRole1.models
     {
         private TrieNode root = new TrieNode();
 
-        public void AddTitle(string prefix)
+        public void AddTitle(string title)
         {
-            AddTitleHelper(prefix, this.root);
+            AddTitleHelper(title, this.root);
         }
 
-        private void AddTitleHelper(string prefix, TrieNode node)
+        private void AddTitleHelper(string title, TrieNode node)
         {
-            if (prefix.Length == 0) // handle base case
+            if (title.Length == 0) // handle base case
             {
                 return;
             }
 
-            char firstLetter = prefix[0];
+            char firstLetter = title[0];
             TrieNode nextNode = node.containsChildWith(firstLetter);
 
             if (nextNode == null) // char not there yet, so add it and recurse
@@ -31,31 +32,64 @@ namespace WebRole1.models
                 nextNode.setData(firstLetter); // set its data
                 node.addChild(nextNode); // add new node to current node's collection
                 
-                if (prefix.Length == 1)
+                if (title.Length == 1)
                 {
                     nextNode.markAsWordEnding();
                 }
 
             }
-            AddTitleHelper(prefix.Substring(1), nextNode); // recurse
+            AddTitleHelper(title.Substring(1), nextNode); // recurse
         }
 
         public List<string> SearchForPrefix(string prefix)
         {
-            TrieNode prefixRoot = GetPrefixRoot(prefix);
-            List<string> results = SearchFromPrefixRoot(prefixRoot);
-
+            TrieNode prefixRoot = GetPrefixRoot(prefix, this.root);
+            List<string> results = new List<string>();
+            if (prefixRoot != null)
+            {
+                results = SearchFromPrefixRoot(prefix, prefixRoot);
+            }
+            
             return results;
         }
 
-        private TrieNode GetPrefixRoot(string prefix)
+        private TrieNode GetPrefixRoot(string prefix, TrieNode node)
         {
-            return new TrieNode();
+            if (prefix.Length == 0)
+            {
+                return node;
+            }
+
+            char firstLetter = prefix[0];
+            TrieNode nextNode = node.containsChildWith(firstLetter);
+
+            if (nextNode != null)
+            {
+                return GetPrefixRoot(prefix.Substring(1), nextNode);
+
+            } else
+            {
+                return null;
+            }
         }
 
-        private List<string> SearchFromPrefixRoot(TrieNode prefixRoot)
+        private List<string> SearchFromPrefixRoot(string prefix, TrieNode prefixRoot)
         {
             List<string> results = new List<string>();
+
+            foreach(TrieNode childNode in prefixRoot.getChildren())
+            {
+                StringBuilder suggestionCandidate = new StringBuilder(prefix);
+                suggestionCandidate.Append(childNode.getData());
+
+                if (childNode.isWordEnding)
+                {
+                    results.Add(suggestionCandidate.ToString());
+                }
+
+                results.AddRange(SearchFromPrefixRoot(suggestionCandidate.ToString(), childNode));
+            }
+
             return results;
         }
 

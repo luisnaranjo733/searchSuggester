@@ -38,7 +38,7 @@ namespace WebRole1.models
 
         public void setData(char data)
         {
-            this.data = data;
+            this.data = Char.ToLower(data);
         }
 
         public char getData()

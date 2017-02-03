@@ -14,7 +14,7 @@ namespace ConsoleApplication1
         {
             Trie trie = new Trie();
 
-            string seedFilePath = @"C:\code\info344\hwk2\seed_super_short.txt";
+            string seedFilePath = @"C:\code\info344\hwk2\seed_short.txt";
 
             foreach (string title in File.ReadLines(seedFilePath))
             {
