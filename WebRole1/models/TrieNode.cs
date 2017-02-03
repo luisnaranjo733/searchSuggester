@@ -28,7 +28,7 @@ namespace WebRole1.models
         {
             foreach(TrieNode child in children)
             {
-                if (child.data == data)
+                if (child.data == Char.ToLower(data))
                 {
                     return child;
                 }
