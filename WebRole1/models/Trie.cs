@@ -47,7 +47,7 @@ namespace WebRole1.models
             List<string> results = new List<string>();
             if (prefixRoot != null)
             {
-                results = SearchFromPrefixRoot(prefix, prefixRoot);
+                SearchFromPrefixRoot(ref results, prefix, prefixRoot);
             }
             
             return results;
@@ -73,9 +73,12 @@ namespace WebRole1.models
             }
         }
 
-        private List<string> SearchFromPrefixRoot(string prefix, TrieNode prefixRoot)
+        private void SearchFromPrefixRoot(ref List<string> results, string prefix, TrieNode prefixRoot)
         {
-            List<string> results = new List<string>();
+            if (results.Count >= 10)
+            {
+                return;
+            }
 
             foreach(TrieNode childNode in prefixRoot.getChildren())
             {
@@ -84,13 +87,13 @@ namespace WebRole1.models
 
                 if (childNode.isWordEnding)
                 {
+                    int n = results.Count;
                     results.Add(suggestionCandidate.ToString());
                 }
 
-                results.AddRange(SearchFromPrefixRoot(suggestionCandidate.ToString(), childNode));
+                SearchFromPrefixRoot(ref results, suggestionCandidate.ToString(), childNode);
             }
 
-            return results;
         }
 
     }
