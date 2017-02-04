@@ -85,7 +85,7 @@ namespace WebRole1.models
                 StringBuilder suggestionCandidate = new StringBuilder(prefix);
                 suggestionCandidate.Append(childNode.getData());
 
-                if (childNode.isWordEnding)
+                if (childNode.isWordEnding && results.Count < 10)
                 {
                     int n = results.Count;
                     results.Add(suggestionCandidate.ToString());
