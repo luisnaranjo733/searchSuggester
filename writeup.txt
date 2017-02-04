@@ -1,0 +1,18 @@
+Here was my approach to implementing this project
+Step 1: Write the front end with dummy API dat
+Step 2: Write the script to parse and export a useable version of the Wikipedia dump
+Step 3: Get the backend working locally with a small segment of the full seed file
+Step 4: Figure out the cloud plumbing details, get them to work (pinging service, add titles until memory < 20mb, download blob, etc…)
+Step 5: Combine the cloud plumbing code and the trie code, integrate
+Step 6: Iteratively test and refine
+Step 7: Take a step back and make sure that my code follows best C# practices and code standards (interfaces, encapsulation, OOP, etc…)
+Here was my approach for making sure all of the requirements of the project are met
+Web service works – API returns query suggestions in JSON (fast!)
+I made sure to add little optimizations here and there to make the web service faster. For example, in my recursive code, I stop looping through the child nodes once I’ve found the one I’m looking for. That way the for loop doesn’t continue looping on the way back out of the recursive stack (potentially major optimization)
+Client-side AJAX & modify DOM to show retrieved query suggestions
+For the client side AJAX code, I made sure to separate the code into the 3 tiers of logic. I got everything to work, and then I restructured the code.
+Web service written in C# – C# best practices!
+I made sure to use best C# practices while writing the code
+Query suggestion web service runs on Azure
+I implemented everything on Azure
+
