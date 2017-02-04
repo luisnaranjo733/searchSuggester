@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿using Microsoft.WindowsAzure.ServiceRuntime;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,8 @@ namespace WebRole1
 
         public SuggestionService()
         {
-            string fileDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(); // special dir to store files even in cloud
+
+            string fileDir = Path.GetTempPath();
             seedFilePath = Path.Combine(fileDir, SEED_FILE_NAME); // resolve expected path to seed file
             memProcess = new PerformanceCounter("Memory", "Available MBytes");
 
@@ -58,7 +60,7 @@ namespace WebRole1
                 if (blob.Exists())
                 {
                     // Save blob contents to a file.
-                    using (var fileStream = System.IO.File.OpenWrite(seedFilePath))
+                    using (var fileStream = File.OpenWrite(seedFilePath))
                     {
                         blob.DownloadToStream(fileStream);
                         return true;
@@ -78,28 +80,25 @@ namespace WebRole1
 
 
         [WebMethod]
-        public string[] buildTrie()
+        public float buildTrie()
         {
-            List<string> temp = new List<string>();
-
-            if (!File.Exists(seedFilePath))
+            if (File.Exists(seedFilePath))
             {
-                //return "Sorry, you need to manually download the seed file first";
-                temp.Add("Sorry, you need to manually download the seed file first");
-                return temp.ToArray();
-            }
-
-            foreach(string title in File.ReadLines(seedFilePath))
-            {
-                float memoryRemaining = GetAvailableMBytes();
-                if (memoryRemaining > 20)
+                foreach (string title in File.ReadLines(seedFilePath))
                 {
-                    trie.AddTitle(title);
+                    float memoryRemaining = GetAvailableMBytes();
+                    if (memoryRemaining > 20)
+                    {
+                        trie.AddTitle(title);
+                    } else
+                    {
+                        return memoryRemaining;
+                    }
+
                 }
-
             }
+            return -1.0f;
 
-            return temp.ToArray();
         }
 
         [WebMethod]
