@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Web.Script.Serialization;
+using System.Web.Script.Services;
 using System.Web.Services;
 using WebRole1.models;
 
@@ -18,7 +20,7 @@ namespace WebRole1
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
-    // [System.Web.Script.Services.ScriptService]
+    [System.Web.Script.Services.ScriptService]
     public class SuggestionService : System.Web.Services.WebService
     {
         private string seedFilePath; // path to seed file
@@ -102,10 +104,12 @@ namespace WebRole1
         }
 
         [WebMethod]
-        public string[] searchTrie(string query)
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string searchTrie(string query)
         {
             List<string> results = trie.SearchForPrefix(query);
-            return trie.SearchForPrefix(query).ToArray();
+            string[] resultsArray = trie.SearchForPrefix(query).ToArray();
+            return new JavaScriptSerializer().Serialize(resultsArray);
 
         }
 
